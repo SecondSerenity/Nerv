@@ -1,0 +1,21 @@
+.ctn-account {
+    display: flex;
+    height: 100%;
+    background: url('../images/cyber-home.jpeg');
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+
+.form-account {
+    width: 100%;
+    max-width: 380px;
+    padding: 40px;
+    margin: auto;
+    border: 1px solid #65615e;
+    background-color: #0000008c;
+    border-radius: 10px;
+}
+
+.logo-text-center {
+    text-align: center;
+}

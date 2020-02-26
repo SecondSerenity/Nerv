@@ -1,0 +1,16 @@
+DROP TABLE IF EXISTS invites;
+CREATE TABLE invites(
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    pin_code TEXT NOT NULL,
+    expires DATETIME NOT NULL,
+    UNIQUE(pin_code)
+);
+
+DROP TABLE IF EXISTS users;
+CREATE TABLE users(
+    id            INTEGER PRIMARY KEY AUTOINCREMENT,
+    username      TEXT NOT NULL,
+    email         TEXT NOT NULL,
+    password_hash TEXT NOT NULL,
+    UNIQUE(username, email)
+);
