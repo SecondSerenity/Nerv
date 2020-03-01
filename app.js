@@ -9,8 +9,12 @@ const sqlite = require('sqlite');
 const DbModelFactory = require('./services/DbModelFactory');
 const ModelUser = require('./models/user/ModelUser');
 const ModelInvite = require('./models/invite/ModelInvite');
+const ModelSession = require('./models/auth/ModelSession');
 
 var app = express();
+
+// load config data
+app.config = require('./config');
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -28,6 +32,7 @@ sqlite.open('app.db').then((db) => {
 	let model_factory = new DbModelFactory(db);
 	model_factory.register('ModelUser', ModelUser);
 	model_factory.register('ModelInvite', ModelInvite);
+	model_factory.register('ModelSession', ModelSession);
 	app.models = model_factory;
 });
 

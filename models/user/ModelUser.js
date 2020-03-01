@@ -16,7 +16,12 @@ class ModelUser {
         let results = await this.db.all(query);
         let users = [];
         for (let result of results) {
-            users.push(EntityUser.createFromDb(result));
+            users.push(new EntityUser(
+                result.id,
+                result.username,
+                result.email,
+                result.password_hash
+            ));
         }
         return users;
     }
@@ -33,7 +38,12 @@ class ModelUser {
             return null;
         }
 
-        return EntityUser.createFromDb(result);
+        return new EntityUser(
+            result.id,
+            result.username,
+            result.email,
+            result.password_hash
+        );
     }
 
     /**
@@ -48,7 +58,12 @@ class ModelUser {
             return null;
         }
 
-        return EntityUser.createFromDb(result);
+        return new EntityUser(
+            result.id,
+            result.username,
+            result.email,
+            result.password_hash
+        );
     }
 
     /**

@@ -9,3 +9,46 @@ body {
 a {
 	color: #00B7FF;
 }
+
+.page-content {
+	height: 100%;
+	display: flex;
+    height: 100%;
+    background: url('../images/cyber-home.jpeg');
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+
+.main-content {
+	padding-left: 0px;
+    padding-right: 0px;
+}
+
+.brand {
+	display: flex;
+	justify-content: center;
+}
+
+.brand-icon {
+	width: 40px;
+	height: 40px;
+	border-radius: 10px;
+}
+
+.sidenav {
+	background-color: #0000008c;
+	backdrop-filter: blur(10px);
+	padding: 0px;
+}
+
+.fullscreen {
+	height: 100%;
+}
+
+.bg-lightgrey{
+	background-color: rgb(51, 51, 51);
+}
+
+.bg-darkgrey {
+	background-color: rgb(30, 30, 30);
+}

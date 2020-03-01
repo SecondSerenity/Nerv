@@ -20,7 +20,11 @@ class ModelInvite {
             return null;
         }
 
-        return EntityInvite.createFromDb(result);
+        return new EntityInvite(
+            result.id,
+            result.pin_code,
+            new Date(result.expires)
+        );
     }
 
     /**

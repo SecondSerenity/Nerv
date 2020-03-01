@@ -1,24 +1,19 @@
 const crypto = require('crypto');
 
 class EntityInvite {
-    constructor(newPin = true) {
-        this.id = 0;
-        this.pin_code = newPin ? crypto.randomBytes(8).toString('hex') : '';
-        this.expires = new Date();
-        this.expires.setDate(this.expires.getDate() + 1);
+    constructor(id, pinCode, expires) {
+        this.id = id;
+        this.pin_code = pinCode;
+        this.expires = expires;
     }
 
-    /**
-     * @param {object} record
-     * 
-     * @returns {EntityUser}
-     */
-    static createFromDb(record) {
-        let invite = new EntityInvite(false);
-        invite.id = record.id;
-        invite.pin_code = record.pin_code;
-        invite.created = new Date(record.created);
-        return invite;
+    randomizePinCode() {
+        this.pin_code = crypto.randomBytes(8).toString('hex');
+    }
+
+    setNewExpiration() {
+        this.expires = new Date();
+        this.expires.setDate(this.expires.getDate() + 1);
     }
 }
 

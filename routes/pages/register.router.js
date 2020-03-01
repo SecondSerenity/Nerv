@@ -5,6 +5,11 @@ const EntityUser = require('../../models/user/EntityUser');
 let router = express.Router();
 
 router.get('/', (req, res) => {
+	if (req.app.get('session')) {
+        // user is already registered
+		return res.redirect('/');
+	}
+
 	res.render('register', {title: 'Register'});
 });
 
@@ -42,7 +47,7 @@ router.post('/', register_params, async(req, res) => {
     }
 
     await invites.deleteInvite(invite.id);
-    let new_user = new EntityUser(req.body.username, req.body.email);
+    let new_user = new EntityUser(0, req.body.username, req.body.email, '');
     new_user.setPassword(req.body.password);
     await users.createUser(new_user);
 

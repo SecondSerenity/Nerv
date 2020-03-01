@@ -2,31 +2,29 @@
 <link rel="stylesheet" href="/css/external.css"/>
 {{/extend}}
 
-<div class="ctn-account">
-    <form id="loginForm" class="form-account" action="/login" method="POST" novalidate>
-        <div class='logo-text-center'>
-            <h1 class="text-white">NERV</h1>
-            <p class="text-white">Managing your home. Away from home.</p>
-        </div>
-        {{#if serverMessage}}
-            <div class="alert alert-danger">{{serverMessage}}</div>
-        {{/if}}
-        <div class="form-group">
-            <input type="text" id="login" class="form-control" name="login" placeholder="Login" required>
-             <div class="invalid-feedback">
-                Please provide a username or password.
-            </div>
-        </div>
-        <div class="form-group">
-            <input type="password" id="password" class="form-control" name="password" placeholder="Password" required>
+<form id="loginForm" class="form-account" action="/login" method="POST" novalidate>
+    <div class='logo-text-center'>
+        <h1 class="text-white">NERV</h1>
+        <p class="text-white">Managing your home. Away from home.</p>
+    </div>
+    {{#if serverMessage}}
+        <div class="alert alert-danger">{{serverMessage}}</div>
+    {{/if}}
+    <div class="form-group">
+        <input type="text" id="login" class="form-control" name="login" placeholder="Login" required>
             <div class="invalid-feedback">
-                Please provide a password.
-            </div>
+            Please provide a username or password.
         </div>
-        <button class="btn btn-primary btn-block">Login</button>
-        <small class="form-text text-white mt-2">Don't have an account? <a href="/register">Register</a></small>
-    </form>
-</div>
+    </div>
+    <div class="form-group">
+        <input type="password" id="password" class="form-control" name="password" placeholder="Password" required>
+        <div class="invalid-feedback">
+            Please provide a password.
+        </div>
+    </div>
+    <button class="btn btn-primary btn-block">Login</button>
+    <small class="form-text text-white mt-2">Don't have an account? <a href="/register">Register</a></small>
+</form>
 <script>
 window.addEventListener('load', function() {
     let form = document.getElementById('loginForm');

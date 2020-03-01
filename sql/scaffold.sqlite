@@ -14,3 +14,11 @@ CREATE TABLE users(
     password_hash TEXT NOT NULL,
     UNIQUE(username, email)
 );
+
+DROP TABLE IF EXISTS sessions;
+CREATE TABLE sessions(
+    jti INTEGER PRIMARY KEY AUTOINCREMENT,
+    user_id INTEGER,
+    refresh_token TEXT NOT NULL,
+    FOREIGN KEY(user_id) REFERENCES users(id)
+);

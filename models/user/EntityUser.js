@@ -1,11 +1,11 @@
 const bcrypt = require('bcryptjs');
 
 class EntityUser {
-    constructor(username, email) {
-        this.id = 0;
-        this.password_hash = '';
+    constructor(id, username, email, passwordHash) {
+        this.id = id;
         this.username = username;
-        this.email = email;        
+        this.email = email;
+        this.password_hash = passwordHash;  
     }
 
     setPassword(unhashed) {
@@ -20,18 +20,6 @@ class EntityUser {
         let data = {... this};
         delete data.password_hash;
         return data;
-    }
-
-    /**
-     * @param {object} record
-     * 
-     * @returns {EntityUser}
-     */
-    static createFromDb(record) {
-        let user = new EntityUser(record.username, record.email);
-        user.id = record.id;
-        user.password_hash = record.password_hash;
-        return user;
     }
 }
 
