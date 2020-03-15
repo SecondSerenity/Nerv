@@ -1,6 +1,8 @@
 const express = require('express');
 const {check, validationResult} = require('express-validator');
+const jwt = require('jsonwebtoken');
 const EntityUser = require('../../models/user/EntityUser');
+const EntitySession = require('../../models/auth/EntitySession');
 
 let router = express.Router();
 
@@ -10,7 +12,7 @@ router.get('/', (req, res) => {
 		return res.redirect('/');
 	}
 
-	res.render('register', {title: 'Register'});
+	res.render('register', {layout: 'external.layout.hbs', title: 'Register'});
 });
 
 let register_params = [
@@ -51,11 +53,22 @@ router.post('/', register_params, async(req, res) => {
     new_user.setPassword(req.body.password);
     await users.createUser(new_user);
 
-    res.send('Account created!');
+    let session = new EntitySession(0, new_user.id, '');
+	session.randomizeRefreshToken();
+	let sessions = req.app.models.get('ModelSession');
+	await sessions.createSession(session);
+
+	let token = jwt.sign({jti: session.jti}, req.app.config.appSecret, {
+		expiresIn: 86400 // expires in 24 hours
+	});
+
+	res.cookie('token', token);
+	res.redirect('/');
 });
 
 let returnErrorResponse = (res, formData, message) => {
     res.render('register', {
+        layout: 'external.layout.hbs',
         title: 'Register',
         serverMessage: message,
         formData: formData

@@ -6,6 +6,10 @@ body {
 	font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
 }
 
+p, h2 {
+	color: #fff!important;
+}
+
 a {
 	color: #00B7FF;
 }

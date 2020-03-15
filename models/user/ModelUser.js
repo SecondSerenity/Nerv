@@ -78,8 +78,11 @@ class ModelUser {
             ) VALUES ( ?, ?, ?)
         `;
         let params = [entity.username, entity.email, entity.password_hash];
-
         await this.db.run(query, params);
+
+        query = 'SELECT last_insert_rowid() as id';
+        let result = await this.db.get(query);
+        entity.id = result.id;
     }
 }
 

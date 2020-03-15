@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>{{title}} - NERV</title>
+		<meta charset="utf-8" />
+		<link rel="icon" href="images/appicon.ico" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<meta name="theme-color" content="#000000" />
+		<link rel="apple-touch-icon" href="/images/appicon.ico" />
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+		<link rel='stylesheet' href='/thirdparty/bootstrap.min.css' />
+		<link rel='stylesheet' href='/css/theme.css' />
+		{{{block "css"}}}
+	</head>
+	<body>
+		<div class="page-content">
+            <div class="fullscreen container-fluid">
+                <div class="fullscreen row">
+                    <div class="sidenav d-none d-lg-block col-lg-2">
+                        <div class="brand container mt-5 mb-3">
+                            <img src="/images/appicon.ico" class="brand-icon mr-2">
+                            <h2>NERV</h2>
+                        </div>
+                        <ul class="nav nav-pills flex-column">
+                            <li class="nav-item">
+                                <a class="nav-link {{#if onDashboard}}active{{/if}}" href="/">Dashboard</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link {{#if onSensors}}active{{/if}}" href="/sensors">Sensors</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link {{#if onInventory}}active{{/if}}" href="/inventory">Inventory</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link {{#if onSettings}}active{{/if}}" href="/settings">Settings</a>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="main-content col-lg-10 col-sm-12 bg-darkgrey">
+                        <nav class="navbar sticky-top navbar-expand-lg navbar-dark bg-lightgrey">
+                            <ul class="navbar-nav ml-auto">
+                                <li class="nav-item dropdown">
+                                    <a class="nav-link dropdown-toggle" href="#" id="profileMenu" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                        {{username}}
+                                    </a>
+                                    <div class="dropdown-menu" aria-labelledby="profileMenu">
+                                        <button class="dropdown-item" type="submit" form="logout">Logout</button>
+                                        <form id="logout" class="d-none" action="/logout" method="POST"></form>
+                                    </div>
+                                </li>
+                            </ul>
+                        </nav>
+                        <div id="content-pane" class="col-10">
+                            {{{body}}}
+                        </div>
+                    </div>
+                </div>
+            </div>
+		</div>
+		<script src='/thirdparty/jquery.min.js'></script>
+		<script src='/thirdparty/bootstrap.bundle.min.js'></script>
+	</body>
+</html>
