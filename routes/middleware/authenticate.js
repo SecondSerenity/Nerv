@@ -8,12 +8,14 @@ module.exports = async (req, res, next) => {
 
     jwt.verify(token, req.app.config.appSecret, async (error, decoded) => {
         if (error) {
+            res.clearCookie('token');
             return res.redirect('/login');
         }
 
         let sessions = req.app.models.get('ModelSession');
         let active_session = await sessions.getSession(decoded.jti);
         if (!active_session) {
+            res.clearCookie('token');
             return res.redirect('/login');
         }
 
