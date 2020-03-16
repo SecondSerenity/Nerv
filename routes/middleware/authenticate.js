@@ -9,6 +9,7 @@ module.exports = async (req, res, next) => {
     jwt.verify(token, req.app.config.appSecret, async (error, decoded) => {
         if (error) {
             res.clearCookie('token');
+            req.app.set('session', null);
             return res.redirect('/login');
         }
 
@@ -16,6 +17,7 @@ module.exports = async (req, res, next) => {
         let active_session = await sessions.getSession(decoded.jti);
         if (!active_session) {
             res.clearCookie('token');
+            req.app.set('session', null);
             return res.redirect('/login');
         }
 

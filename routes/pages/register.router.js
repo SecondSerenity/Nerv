@@ -9,7 +9,7 @@ let router = express.Router();
 router.get('/', (req, res) => {
 	if (req.app.get('session')) {
         // user is already registered
-		return res.redirect('../');
+		return res.redirect('/');
 	}
 
 	res.render('register', {layout: 'external.layout.hbs', title: 'Register'});
