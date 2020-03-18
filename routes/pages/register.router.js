@@ -7,7 +7,7 @@ const EntitySession = require('../../models/auth/EntitySession');
 let router = express.Router();
 
 router.get('/', (req, res) => {
-	if (req.app.get('session')) {
+	if (req.session) {
         // user is already registered
 		return res.redirect('/');
 	}

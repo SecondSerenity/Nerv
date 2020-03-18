@@ -7,7 +7,7 @@ const renderInternalPage = (route, name, title) => {
 		let page_data = {
 			layout: 'internal.layout.hbs',
 			title: title,
-			username: req.app.get('user').username
+			username: req.user.username
 		};
 		page_data['on' + title] = true;
 		res.render(name, page_data);
@@ -22,11 +22,9 @@ renderInternalPage('/settings', 'settings', 'Settings');
 router.use('/login', require('./login.router'));
 router.use('/register', require('./register.router'));
 
-router.post('/logout', (req, res) => {
+router.post('/logout', authenticate, (req, res) => {
 	let sessions = req.app.models.get('ModelSession');
-	sessions.deleteSession(req.app.get('session').jti);
-	req.app.set('session', null);
-	req.app.set('user', null);
+	sessions.deleteSession(req.session.jti);
 	res.clearCookie('token');
 	res.redirect('/login');
 });

@@ -9,22 +9,22 @@ module.exports = async (req, res, next) => {
     jwt.verify(token, req.app.config.appSecret, async (error, decoded) => {
         if (error) {
             res.clearCookie('token');
-            req.app.set('session', null);
-            return res.redirect('/login');
+            res.redirect('/login');
+            return;
         }
 
         let sessions = req.app.models.get('ModelSession');
         let active_session = await sessions.getSession(decoded.jti);
         if (!active_session) {
             res.clearCookie('token');
-            req.app.set('session', null);
-            return res.redirect('/login');
+            res.redirect('/login');
+            return;
         }
 
         // if everything good, save to request for use in other routes
         let users = req.app.models.get('ModelUser');
-        req.app.set('session', active_session);
-        req.app.set('user', await users.getUserById(active_session.user_id));
+        req.session = active_session;
+        req.user = await users.getUserById(active_session.user_id);
         next();
     });
 }
