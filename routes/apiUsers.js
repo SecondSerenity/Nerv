@@ -1,15 +1,16 @@
 const express = require('express');
+const authenticate = require('./middleware/authenticate');
 let router = express.Router();
 
 /* GET /users */
-router.get('/', async(req, res) => {
+router.get('/', authenticate, async(req, res) => {
   let model = req.app.models.get('ModelUser');
   let users = await model.getAllUsers();
   res.json(users);
 });
 
 /* GET /users/:id */
-router.get('/:userId', async(req, res) => {
+router.get('/:userId', authenticate, async(req, res) => {
   let model = req.app.models.get('ModelUser');
   let user = await model.getUserById(req.params.userId);
   if (user === null) {
