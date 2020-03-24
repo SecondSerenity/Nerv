@@ -4,7 +4,9 @@ let router = express.Router();
 
 const npm_dependencies = [
     {route: '/bootstrap.min.css', path: 'bootstrap/dist/css/bootstrap.min.css'},
+    {route: '/bootstrap.min.css.map', path: 'bootstrap/dist/css/bootstrap.min.css.map'},
     {route: '/bootstrap.bundle.min.js', path: 'bootstrap/dist/js/bootstrap.bundle.min.js'},
+    {route: '/bootstrap.bundle.min.js.map', path: 'bootstrap/dist/js/bootstrap.bundle.min.js.map'},
     {route: '/jquery.min.js', path: 'jquery/dist/jquery.min.js'}
 ];
 
