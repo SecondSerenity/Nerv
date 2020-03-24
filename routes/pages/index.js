@@ -1,6 +1,6 @@
 const express = require('express');
 let router = express.Router();
-let authenticate = require('../middleware/authenticate');
+let authenticate = require('../middleware/authenticate').browserAuthenticate;
 
 const renderInternalPage = (route, name, title) => {
 	router.get(route, authenticate, function (req, res) {
