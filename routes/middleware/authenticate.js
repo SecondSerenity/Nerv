@@ -2,22 +2,21 @@ const ControllerAuth = require('../../controllers/ControllerAuth');
 
 module.exports.browserAuthenticate = async (req, res, next) => {
     let token = req.cookies['token'];
-    if (!token) {
+    let refresh = req.cookies['refresh'];
+    if (!token || !refresh) {
         return res.redirect('/login');
     }
 
     let controller = new ControllerAuth(req.app.models, req.app.config.appSecret);
-    let payload = await controller.checkTokenValidity(token);
-    if (!payload) {
-        // invalid token
-        res.clearCookie('token');
-        return res.redirect('/login');
-    }
-
-    let session_data = await controller.findSession(payload);
+    let session_data = await controller.checkSessionValidity(token);
     if (!session_data) {
-        res.clearCookie('token');
-        return res.redirect('/login');
+        session_data = await controller.refreshSession(token, refresh);
+        if (!session_data) {
+            res.clearCookie('token').clearCookie('refresh');
+            return res.redirect('/login');
+        }
+        res.cookie('token', session_data.token);
+        res.cookie('refresh', session_data.session.refresh_token);
     }
 
     // if everything good, save to request for use in other routes
@@ -39,13 +38,7 @@ module.exports.apiAuthenticate = async (req, res, next) => {
     }
 
     let controller = new ControllerAuth(req.app.models, req.app.config.appSecret);
-    let payload = await controller.checkTokenValidity(parts[1]);
-    if (!payload) {
-        // invalid token
-        return res.status(401).json(INVALID_TOKEN_MESSAGE);
-    }
-
-    let session_data = await controller.findSession(payload);
+    let session_data = await controller.checkSessionValidity(parts[1]);
     if (!session_data) {
         return res.status(401).json(INVALID_TOKEN_MESSAGE);
     }

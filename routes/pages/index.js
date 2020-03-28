@@ -26,7 +26,7 @@ router.use('/register', require('./register.router'));
 router.post('/logout', authenticate, (req, res) => {
 	let controller = new ControllerAuth(req.app.models, req.app.config.appSecret);
 	controller.deleteSession(req.session);
-	res.clearCookie('token');
+	res.clearCookie('token').clearCookie('refresh');
 	res.redirect('/login');
 });
 

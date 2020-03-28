@@ -30,6 +30,7 @@ router.post('/', login_params, async (req, res) => {
 	}
 
 	res.cookie('token', new_session.token);
+	res.cookie('refresh', new_session.session.refresh_token);
 	res.redirect('/');
 });
 
