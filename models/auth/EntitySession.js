@@ -1,10 +1,11 @@
 const crypto = require('crypto');
 
 class EntitySession {
-    constructor(jti, userId, refreshToken) {
+    constructor(jti, userId, refreshToken, expires) {
         this.jti = jti;
         this.user_id = userId;
         this.refresh_token = refreshToken;
+        this.expires = expires;
     }
 
     randomizeRefreshToken() {

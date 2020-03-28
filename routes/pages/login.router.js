@@ -1,7 +1,6 @@
 const express = require('express');
 const {check, validationResult} = require('express-validator');
-const jwt = require('jsonwebtoken');
-const EntitySession = require('../../models/auth/EntitySession');
+const ControllerAuth = require('../../controllers/ControllerAuth');
 
 let router = express.Router();
 
@@ -21,27 +20,17 @@ let login_params = [
 router.post('/', login_params, async (req, res) => {
 	const errors = validationResult(req);
 	if (!errors.isEmpty()) {
-		res.render('login', {layout: 'external.layout.hbs', title: 'Login', serverMessage: 'Validation error.'});
-		return;
+		return res.render('login', {layout: 'external.layout.hbs', title: 'Login', serverMessage: 'Validation error.'});
 	}
 
-	let users = req.app.models.get('ModelUser');
-	let user = await users.getUserByLogin(req.body.login);
-	if (user === null || !user.checkPassword(req.body.password)) {
-		res.render('login', {layout: 'external.layout.hbs', title: 'Login', serverMessage: 'Invalid login or password.'});
-		return;
+	let controller = new ControllerAuth(req.app.models, req.app.config.appSecret);
+	let new_session = await controller.login(req.body.login, req.body.password);
+	if (!new_session) {
+		return res.render('login', {layout: 'external.layout.hbs', title: 'Login', serverMessage: 'Invalid login or password.'});
 	}
 
-	let session = new EntitySession(0, user.id, '');
-	session.randomizeRefreshToken();
-	let sessions = req.app.models.get('ModelSession');
-	await sessions.createSession(session);
-
-	let token = jwt.sign({jti: session.jti}, req.app.config.appSecret, {
-		expiresIn: 86400 // expires in 24 hours
-	});
-
-	res.cookie('token', token);
+	res.cookie('token', new_session.token);
+	res.cookie('refresh', new_session.session.refresh_token);
 	res.redirect('/');
 });
 
