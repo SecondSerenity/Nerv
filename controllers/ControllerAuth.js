@@ -1,3 +1,4 @@
+const moment = require('moment');
 const jwt = require('jsonwebtoken');
 const EntitySession = require('../models/auth/EntitySession');
 
@@ -30,10 +31,11 @@ class ControllerAuth {
      * @returns {Object}
      */
     async createNewSession(user) {
-        let session = new EntitySession(0, user.id, '');
+        let expiration = moment().add(1, 'week').toISOString();
+        let session = new EntitySession(0, user.id, '', expiration);
         session.randomizeRefreshToken();
         await this.sessions.createSession(session);
-    
+
         let token = jwt.sign({jti: session.jti}, this.secret, {
             expiresIn: 86400 // expires in 24 hours
         });

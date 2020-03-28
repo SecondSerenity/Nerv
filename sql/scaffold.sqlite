@@ -1,8 +1,8 @@
 DROP TABLE IF EXISTS invites;
 CREATE TABLE invites(
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    id       INTEGER PRIMARY KEY AUTOINCREMENT,
     pin_code TEXT NOT NULL,
-    expires DATETIME NOT NULL,
+    expires  DATETIME NOT NULL,
     UNIQUE(pin_code)
 );
 
@@ -17,8 +17,9 @@ CREATE TABLE users(
 
 DROP TABLE IF EXISTS sessions;
 CREATE TABLE sessions(
-    jti INTEGER PRIMARY KEY AUTOINCREMENT,
-    user_id INTEGER,
+    jti           INTEGER PRIMARY KEY AUTOINCREMENT,
+    user_id       INTEGER,
     refresh_token TEXT NOT NULL,
+    expires       DATETIME NOT NULL,
     FOREIGN KEY(user_id) REFERENCES users(id)
 );
