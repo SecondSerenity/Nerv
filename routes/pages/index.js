@@ -1,5 +1,6 @@
 const express = require('express');
 let router = express.Router();
+let ControllerAuth = require('../../controllers/ControllerAuth');
 let authenticate = require('../middleware/authenticate').browserAuthenticate;
 
 const renderInternalPage = (route, name, title) => {
@@ -23,8 +24,8 @@ router.use('/login', require('./login.router'));
 router.use('/register', require('./register.router'));
 
 router.post('/logout', authenticate, (req, res) => {
-	let sessions = req.app.models.get('ModelSession');
-	sessions.deleteSession(req.session.jti);
+	let controller = new ControllerAuth(req.app.models, req.app.config.appSecret);
+	controller.deleteSession(req.session);
 	res.clearCookie('token');
 	res.redirect('/login');
 });

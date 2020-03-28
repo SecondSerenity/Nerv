@@ -1,8 +1,7 @@
 const express = require('express');
 const {check, validationResult} = require('express-validator');
-const jwt = require('jsonwebtoken');
 const EntityUser = require('../../models/user/EntityUser');
-const EntitySession = require('../../models/auth/EntitySession');
+const ControllerAuth = require('../../controllers/ControllerAuth');
 
 let router = express.Router();
 
@@ -27,7 +26,7 @@ router.post('/', register_params, async(req, res) => {
 		returnErrorResponse(res, req.body, 'Validation error.');
 		return;
     }
-    
+
     let invites = req.app.models.get('ModelInvite');
     let invite = await invites.getActiveInvite(req.body.pin_code);
     if (null === invite) {
@@ -53,16 +52,9 @@ router.post('/', register_params, async(req, res) => {
     new_user.setPassword(req.body.password);
     await users.createUser(new_user);
 
-    let session = new EntitySession(0, new_user.id, '');
-	session.randomizeRefreshToken();
-	let sessions = req.app.models.get('ModelSession');
-	await sessions.createSession(session);
-
-	let token = jwt.sign({jti: session.jti}, req.app.config.appSecret, {
-		expiresIn: 86400 // expires in 24 hours
-	});
-
-	res.cookie('token', token);
+    let auth_controller = new ControllerAuth(req.app.models, req.app.config.appSecret);
+    let session_data = await auth_controller.createNewSession(new_user);
+	res.cookie('token', session_data.token);
 	res.redirect('/');
 });
 

@@ -1,4 +1,4 @@
-const jwt = require('jsonwebtoken');
+const ControllerAuth = require('../../controllers/ControllerAuth');
 
 module.exports.browserAuthenticate = async (req, res, next) => {
     let token = req.cookies['token'];
@@ -6,27 +6,24 @@ module.exports.browserAuthenticate = async (req, res, next) => {
         return res.redirect('/login');
     }
 
-    jwt.verify(token, req.app.config.appSecret, async (error, decoded) => {
-        if (error) {
-            res.clearCookie('token');
-            res.redirect('/login');
-            return;
-        }
+    let controller = new ControllerAuth(req.app.models, req.app.config.appSecret);
+    let payload = await controller.checkTokenValidity(token);
+    if (!payload) {
+        // invalid token
+        res.clearCookie('token');
+        return res.redirect('/login');
+    }
 
-        let sessions = req.app.models.get('ModelSession');
-        let active_session = await sessions.getSession(decoded.jti);
-        if (!active_session) {
-            res.clearCookie('token');
-            res.redirect('/login');
-            return;
-        }
+    let session_data = await controller.findSession(payload);
+    if (!session_data) {
+        res.clearCookie('token');
+        return res.redirect('/login');
+    }
 
-        // if everything good, save to request for use in other routes
-        let users = req.app.models.get('ModelUser');
-        req.session = active_session;
-        req.user = await users.getUserById(active_session.user_id);
-        next();
-    });
+    // if everything good, save to request for use in other routes
+    req.session = session_data.session;
+    req.user = session_data.user;
+    next();
 }
 
 let INVALID_TOKEN_MESSAGE = [{error:"Invalid or missing API token."}];
@@ -41,21 +38,20 @@ module.exports.apiAuthenticate = async (req, res, next) => {
         return res.status(401).json(INVALID_TOKEN_MESSAGE);
     }
 
-    jwt.verify(parts[1], req.app.config.appSecret, async (error, decoded) => {
-        if (error) {
-            return res.status(401).json(INVALID_TOKEN_MESSAGE);
-        }
+    let controller = new ControllerAuth(req.app.models, req.app.config.appSecret);
+    let payload = await controller.checkTokenValidity(parts[1]);
+    if (!payload) {
+        // invalid token
+        return res.status(401).json(INVALID_TOKEN_MESSAGE);
+    }
 
-        let sessions = req.app.models.get('ModelSession');
-        let active_session = await sessions.getSession(decoded.jti);
-        if (!active_session) {
-            return res.status(401).json(INVALID_TOKEN_MESSAGE);
-        }
+    let session_data = await controller.findSession(payload);
+    if (!session_data) {
+        return res.status(401).json(INVALID_TOKEN_MESSAGE);
+    }
 
-        // if everything good, save to request for use in other routes
-        let users = req.app.models.get('ModelUser');
-        req.session = active_session;
-        req.user = await users.getUserById(active_session.user_id);
-        next();
-    });
+    // if everything good, save to request for use in other routes
+    req.session = session_data.session;
+    req.user = session_data.user;
+    next();
 };
