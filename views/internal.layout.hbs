@@ -54,6 +54,12 @@
                         <div id="content-pane" class="col-10">
                             {{{body}}}
                         </div>
+                        <div class="nav-mobile d-lg-none text-muted">
+                            <a class="nav-link-mobile nav-link {{#if onDashboard}}active{{/if}}" href="/"><i class="material-icons md-24">web</i>Dashboard</a>
+                            <a class="nav-link-mobile nav-link {{#if onSensors}}active{{/if}}" href="/sensors"><i class="material-icons md-24">gps_fixed</i>Sensors</a>
+                            <a class="nav-link-mobile nav-link {{#if onInventory}}active{{/if}}" href="/inventory"><i class="material-icons md-24">list</i>Inventory</a>
+                            <a class="nav-link-mobile nav-link {{#if onSettings}}active{{/if}}" href="/settings"><i class="material-icons md-24">settings</i>Settings</a>
+                        </div>
                     </div>
                 </div>
             </div>
